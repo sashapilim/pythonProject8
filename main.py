@@ -1,16 +1,34 @@
-# This is a sample Python script.
+from flask import Flask, jsonify
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from utils import search_by_title, search_by_date, find_film_by_rating, find_film_by_genre
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 
 
-# Press the green button in the gutter to run the script.
+@app.route("/movie/<title>")
+def get_film_page(title):
+    res = search_by_title(title)
+    return jsonify(res)
+
+
+@app.route("/movie/<int:year_1>/to/<int:year_2>")
+def search_year_page(year_1, year_2):
+    result = search_by_date(year_1, year_2)
+    return jsonify(result)
+
+
+@app.route("/rating/<rating>")
+def search_rating_page(rating):
+    result = find_film_by_rating(rating)
+    return jsonify(result)
+
+
+@app.route("/genre/<genre>")
+def search_genre_page(genre):
+    result = find_film_by_genre(genre)
+    return jsonify(result)
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    app.run()
